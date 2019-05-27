@@ -4,6 +4,7 @@ import { Connection } from 'typeorm';
 import * as path from 'path';
 
 import { ResumeController } from './resume/resume.controller';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -12,10 +13,11 @@ import { ResumeController } from './resume/resume.controller';
       url: process.env.DATABASE_URL,
       synchronize: false,
       entities: [path.join(__dirname, '../', '/src/**/*.entity.ts')],
-      // migrations: [path.join(__dirname, "src/migrations/*.ts")],
+      migrations: [path.join(__dirname, '../', 'src/migrations/*.ts')],
       logging: true,
       ssl: true,
     }),
+    AuthModule,
   ],
   controllers: [ResumeController],
   providers: [],
