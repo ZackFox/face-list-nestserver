@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
 import * as path from 'path';
 
-import { ResumeController } from './resume/resume.controller';
 import { AuthModule } from './auth/auth.module';
+import { ResumeModule } from './resume/resume.module';
 
 @Module({
   imports: [
@@ -18,8 +18,9 @@ import { AuthModule } from './auth/auth.module';
       ssl: true,
     }),
     AuthModule,
+    ResumeModule,
   ],
-  controllers: [ResumeController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {
