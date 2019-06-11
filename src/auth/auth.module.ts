@@ -16,7 +16,7 @@ import { AuthController } from './auth.controller';
         expiresIn: 3600,
       },
     }),
-    UserModule,
+    UserModule, // -> exports UserService
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

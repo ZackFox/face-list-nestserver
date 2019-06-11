@@ -3,8 +3,10 @@ import { JwtService } from '@nestjs/jwt';
 
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
-import { LoginUserDto } from '../user/loginUser.dto';
-import { CreateUserDto } from '../user/createUser.dto';
+import { LoginUserDto } from '../user/dto/loginUser.dto';
+import { CreateUserDto } from '../user/dto/createUser.dto';
+import { plainToClass } from 'class-transformer';
+// import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Injectable()
 export class AuthService {
@@ -14,8 +16,13 @@ export class AuthService {
   ) {}
 
   public async register(userData: CreateUserDto): Promise<any> {
-    const user = new User(userData);
+    const user = plainToClass(User, userData);
     return this.userService.createUser(user);
+  }
+
+  public findUser(token: string) {
+    const user: any = this.jwtService.decode(token);
+    return this.userService.findUser(user.email);
   }
 
   public createToken(user: User): string {
