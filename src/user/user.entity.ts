@@ -8,22 +8,10 @@ import {
 import * as bcrypt from 'bcryptjs';
 
 import { Resume } from '../resume/resume.entity';
-import { CreateUserDto } from './createUser.dto';
+import { CreateUserDto } from './dto/createUser.dto';
 
 @Entity()
 export class User {
-  constructor(userData: CreateUserDto) {
-    if (!!userData) {
-      this.firstname = userData.firstname;
-      this.lastname = userData.lastname;
-      this.age = userData.age;
-      this.sex = userData.sex;
-      this.city = userData.city;
-      this.email = userData.email;
-      this.password = userData.password;
-    }
-  }
-
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -40,7 +28,7 @@ export class User {
   city: string;
 
   @Column({ type: 'varchar', nullable: false })
-  sex: string;
+  gender: string;
 
   @Column({ type: 'varchar', nullable: false, length: '160' })
   email: string;
