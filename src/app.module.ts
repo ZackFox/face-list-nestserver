@@ -12,7 +12,7 @@ import { ResumeModule } from './resume/resume.module';
       type: 'postgres',
       url: process.env.DATABASE_URL,
       synchronize: false,
-      entities: [path.join(__dirname, '../', '/src/**/*.entity.ts')],
+      entities: [`${__dirname}/**/*.entity{.ts,.js}`],
       migrations: [path.join(__dirname, '../', 'src/migrations/*.ts')],
       logging: true,
       ssl: true,
