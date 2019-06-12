@@ -5,35 +5,36 @@ import {
   OneToMany,
   BeforeInsert,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import * as bcrypt from 'bcryptjs';
 
 import { Resume } from '../resume/resume.entity';
-import { CreateUserDto } from './dto/createUser.dto';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', nullable: false, length: '100' })
+  @Column('varchar', { length: '100' })
   firstname: string;
 
-  @Column({ type: 'varchar', nullable: false, length: '100' })
+  @Column('varchar', { length: '100' })
   lastname: string;
 
-  @Column({ type: 'integer', nullable: false })
+  @Column('integer')
   age: number;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column('varchar')
   city: string;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column('varchar')
   gender: string;
 
-  @Column({ type: 'varchar', nullable: false, length: '160' })
+  @Column('varchar', { length: '160' })
   email: string;
 
-  @Column({ type: 'varchar', nullable: false, length: '100' })
+  @Exclude()
+  @Column('varchar', { length: '100' })
   password: string;
 
   @OneToMany(() => Resume, (resume: Resume) => resume.owner)

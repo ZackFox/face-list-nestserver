@@ -6,6 +6,8 @@ import {
   Response,
   UseGuards,
   Headers,
+  UseInterceptors,
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import {
   ApiUseTags,
@@ -59,7 +61,6 @@ export class AuthController {
 
   @Get('user')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ title: 'Get user data' })
   @ApiResponse({
     status: 200,
@@ -69,6 +70,8 @@ export class AuthController {
     status: 401,
     description: 'Unauthorized.',
   })
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(ClassSerializerInterceptor)
   getUser(@Headers('authorization') authHeader) {
     const token = authHeader.split(' ')[1];
     return this.authService.findUser(token);
