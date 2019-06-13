@@ -7,6 +7,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.setGlobalPrefix('/api/v1');
   app.useGlobalPipes(
     new ValidationPipe({
@@ -21,7 +22,9 @@ async function bootstrap() {
     .setVersion('1.0')
     .setBasePath('api/v1')
     .addBearerAuth()
+    .setSchemes(process.env.NODE_ENV === 'production' ? 'https' : 'http')
     .build();
+
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/swagger', app, document);
 
