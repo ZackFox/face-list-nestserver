@@ -55,7 +55,7 @@ export class ResumeService {
     });
   }
 
-  deleteOne(id: number) {
+  async deleteOne(id: number) {
     return this.resumeRepository.delete(id);
   }
 }

@@ -15,6 +15,7 @@ import {
   ApiResponse,
   ApiImplicitQuery,
   ApiOperation,
+  ApiImplicitParam,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
@@ -28,7 +29,6 @@ export class ResumeController {
   constructor(private readonly resumeService: ResumeService) {}
 
   @Get()
-  @Get()
   @ApiOperation({ title: 'Get list of all Resumes' })
   @ApiResponse({
     status: 200,
@@ -41,7 +41,7 @@ export class ResumeController {
   })
   @ApiImplicitQuery({
     name: 'limit',
-    description: 'resumes per page',
+    description: 'quatity per page',
     required: false,
   })
   @ApiImplicitQuery({
@@ -51,7 +51,7 @@ export class ResumeController {
   })
   @ApiImplicitQuery({
     name: 'gender',
-    description: 'filter by position',
+    description: 'filter by gender',
     required: false,
   })
   async findAll(@Query() query, @Res() res: Response) {
@@ -94,6 +94,10 @@ export class ResumeController {
 
   @Get(':id')
   @ApiOperation({ title: 'Get single resume' })
+  @ApiImplicitParam({
+    name: 'id',
+    description: 'resume id',
+  })
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully found.',
@@ -106,14 +110,17 @@ export class ResumeController {
   @Delete(':id')
   @ApiBearerAuth()
   @ApiOperation({ title: 'Delete one resume' })
+  @ApiImplicitParam({
+    name: 'id',
+    description: 'resume id',
+  })
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully deleted.',
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @UseGuards(AuthGuard('jwt'))
-  deleteOne(@Param('id') id) {
-    const deleted = this.resumeService.deleteOne(parseInt(id, 10));
-    console.log(deleted);
+  async deleteOne(@Param('id') id) {
+    await this.resumeService.deleteOne(parseInt(id, 10));
   }
 }
