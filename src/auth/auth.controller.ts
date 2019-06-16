@@ -6,17 +6,15 @@ import {
   Res,
   UseGuards,
   Headers,
-  UseInterceptors,
-  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import {
   ApiUseTags,
   ApiResponse,
   ApiOperation,
   ApiBearerAuth,
-  ApiImplicitBody,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { classToPlain } from 'class-transformer';
 
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/createUser.dto';
@@ -57,8 +55,22 @@ export class AuthController {
     status: 200,
     description: 'Regisration has been successfull.',
   })
-  signUp(@Body() userData: CreateUserDto) {
-    return this.authService.register(userData);
+  @ApiResponse({
+    status: 403,
+    description: 'Current email is used already.',
+  })
+  async signUp(@Res() res, @Body() userDto: CreateUserDto) {
+    const user = await this.authService.findUserByEmail(userDto.email);
+
+    if (user) {
+      return res
+        .status(403)
+        .json({ statusCode: '403', message: 'Current email is used already' });
+    }
+
+    const newUser = await this.authService.register(userDto);
+    const accessToken = this.authService.createToken(newUser);
+    return res.status(200).json({ statusCode: '200', accessToken });
   }
 
   @Get('user')
@@ -73,10 +85,12 @@ export class AuthController {
     description: 'Unauthorized.',
   })
   @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(ClassSerializerInterceptor)
-  getUser(@Headers('authorization') authHeader) {
+  async getUser(@Headers('authorization') authHeader, @Res() res) {
     const token = authHeader.split(' ')[1];
-    return this.authService.findUser(token);
+    const user = await this.authService.getUser(token);
+    return res
+      .status(200)
+      .json({ statusCode: '200', user: classToPlain(user) });
   }
 
   @Post('email')
@@ -90,7 +104,7 @@ export class AuthController {
     description: 'Email is not used',
   })
   async checkEmail(@Res() res, @Body() body: EmailDto) {
-    const user = await this.authService.verifyEmail(body.email);
+    const user = await this.authService.findUserByEmail(body.email);
     if (user) {
       return res.status(201).json({
         statusCode: '201',
