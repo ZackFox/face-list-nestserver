@@ -25,6 +25,10 @@ export class AuthService {
     return this.userService.findUser(user.email);
   }
 
+  public verifyEmail(email: string) {
+    return this.userService.findUser(email);
+  }
+
   public createToken(user: User): string {
     return this.jwtService.sign({
       id: user.id,
