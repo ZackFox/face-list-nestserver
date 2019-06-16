@@ -13,16 +13,13 @@ async function bootstrap() {
 
   app.setGlobalPrefix('/api/v1');
   app.useStaticAssets(join(__dirname, '..', 'public'));
-  app.useGlobalFilters(new NotFoundExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
-      validationError: {
-        target: false,
-        value: false,
-      },
+      validationError: { target: false, value: false },
     }),
   );
+  app.useGlobalFilters(new NotFoundExceptionFilter());
 
   const options = new DocumentBuilder()
     .setTitle('Face List API')
