@@ -22,6 +22,7 @@ import { Response } from 'express';
 
 import { ResumeDto } from './dto/resume.dto';
 import { ResumeService } from './resume.service';
+import { classToPlain } from 'class-transformer';
 
 @ApiUseTags('resumes')
 @Controller('resumes')
@@ -88,8 +89,8 @@ export class ResumeController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @UseGuards(AuthGuard('jwt'))
   async create(@Body() resumeDto: ResumeDto, @Res() res: Response) {
-    const resume = await this.resumeService.createResume(resumeDto);
-    return res.status(201).json({ resume });
+    const data = await this.resumeService.createResume(resumeDto);
+    return res.status(201).json({ data });
   }
 
   @Get(':id')
@@ -103,8 +104,8 @@ export class ResumeController {
     description: 'The record has been successfully found.',
   })
   async findOne(@Param('id') id, @Res() res: Response) {
-    const resume = await this.resumeService.findOneById(parseInt(id, 10));
-    return res.status(200).json({ resume });
+    const data = await this.resumeService.findOneById(parseInt(id, 10));
+    return res.status(200).json({ data });
   }
 
   @Delete(':id')

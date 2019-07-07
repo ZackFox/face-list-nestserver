@@ -15,6 +15,7 @@ export class Resume {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column('integer', { name: 'ownerId' })
   @ManyToOne(() => User, (user: User) => user.resumes)
   owner: User;
 
