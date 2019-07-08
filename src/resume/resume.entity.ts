@@ -25,14 +25,23 @@ export class Resume {
   @Column('varchar', { length: '100' })
   lastname: string;
 
-  @Column('integer')
+  @Column('integer', { default: 14 })
   age: number;
 
   @Column('varchar')
   gender: string;
 
   @Column('varchar')
-  photo: string = 'default.png';
+  city: string;
+
+  @Column('varchar')
+  email: string;
+
+  @Column('varchar', { nullable: true })
+  phone: string;
+
+  @Column('varchar', { nullable: true })
+  photo: string;
 
   @Column('varchar', { length: '200' })
   position: string;

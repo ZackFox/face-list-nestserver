@@ -35,7 +35,9 @@ export class ResumeService {
 
   async findAll(query, limit: number, offset: number) {
     const keys = Object.keys(query);
-    const queryBuilder = getManager().createQueryBuilder(Resume, 'resume');
+    const queryBuilder = getManager()
+      .createQueryBuilder(Resume, 'resume')
+      .leftJoinAndSelect('resume.experience', 'experience');
 
     keys.forEach((param, i) => {
       queryBuilder

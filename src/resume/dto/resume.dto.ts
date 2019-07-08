@@ -1,4 +1,11 @@
-import { IsNotEmpty, IsNumber, ValidateNested, IsEnum } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsNumber,
+  ValidateNested,
+  IsEnum,
+  IsEmail,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiModelProperty } from '@nestjs/swagger';
 
@@ -25,8 +32,24 @@ export class ResumeDto {
   readonly position: string;
 
   @IsNumber()
+  @Min(14)
   @ApiModelProperty()
   readonly age: number;
+
+  @IsNotEmpty()
+  @IsEmail()
+  @ApiModelProperty()
+  readonly email: string;
+
+  @IsNotEmpty()
+  @ApiModelProperty()
+  readonly city: string;
+
+  @ApiModelProperty()
+  readonly phone: string;
+
+  @ApiModelProperty()
+  readonly photo: string;
 
   @IsEnum(Genders, { message: 'Значение может быть "мужчина" или "женщина" ' })
   @ApiModelProperty({ enum: ['мужчина', 'женщина'] })
