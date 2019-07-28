@@ -27,31 +27,35 @@ export class ResumeDto {
   @ApiModelProperty()
   readonly lastname: string;
 
-  @IsNotEmpty()
-  @ApiModelProperty()
-  readonly position: string;
-
   @IsNumber()
   @Min(14)
   @ApiModelProperty()
   readonly age: number;
+
+  @ApiModelProperty()
+  readonly photo: string | null;
+
+  @IsNotEmpty()
+  @ApiModelProperty()
+  readonly city: string;
 
   @IsNotEmpty()
   @IsEmail()
   @ApiModelProperty()
   readonly email: string;
 
-  @IsNotEmpty()
-  @ApiModelProperty()
-  readonly city: string;
-
   @ApiModelProperty()
   readonly phone: string;
 
+  @IsNotEmpty()
   @ApiModelProperty()
-  readonly photo: string;
+  readonly position: string;
 
-  @IsEnum(Genders, { message: 'Значение может быть "мужчина" или "женщина" ' })
+  @IsNotEmpty()
+  @ApiModelProperty()
+  readonly salary: number;
+
+  @IsEnum(Genders, { message: 'Значение "мужчина" или "женщина"' })
   @ApiModelProperty({ enum: ['мужчина', 'женщина'] })
   readonly gender: Genders;
 

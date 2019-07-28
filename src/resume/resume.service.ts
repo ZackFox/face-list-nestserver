@@ -37,7 +37,8 @@ export class ResumeService {
     const keys = Object.keys(query);
     const queryBuilder = getManager()
       .createQueryBuilder(Resume, 'resume')
-      .leftJoinAndSelect('resume.experience', 'experience');
+      .leftJoinAndSelect('resume.experience', 'experience')
+      .orderBy('experience.dateStart', 'DESC');
 
     keys.forEach((param, i) => {
       queryBuilder
@@ -51,10 +52,14 @@ export class ResumeService {
       .getManyAndCount();
   }
 
-  findOneById(id: number): Promise<Resume> {
-    return this.resumeRepository.findOne(id, {
-      relations: ['education', 'experience'],
-    });
+  findOneById(id: number) {
+    return getManager()
+      .createQueryBuilder(Resume, 'resume')
+      .leftJoinAndSelect('resume.experience', 'experience')
+      .orderBy('experience.dateStart', 'DESC')
+      .leftJoinAndSelect('resume.education', 'education')
+      .where({ id })
+      .getOne();
   }
 
   async deleteOne(id: number) {

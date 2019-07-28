@@ -41,10 +41,13 @@ export class Resume {
   phone: string;
 
   @Column('varchar', { nullable: true })
-  photo: string;
+  photo: string | null;
 
   @Column('varchar', { length: '200' })
   position: string;
+
+  @Column('integer')
+  salary: number;
 
   @OneToMany(type => Education, ed => ed.resume, {
     cascade: true,

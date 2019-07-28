@@ -18,7 +18,6 @@ export class ExperienceDto {
   @ApiModelProperty()
   readonly dateStart: string;
 
-  @IsDateString()
   @ApiModelProperty()
-  readonly dateEnd: string;
+  readonly dateEnd: string | null;
 }

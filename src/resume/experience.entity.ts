@@ -23,6 +23,6 @@ export class Experience {
   @Column('timestamp')
   dateStart: string;
 
-  @Column('timestamp')
-  dateEnd: string;
+  @Column('timestamp', { nullable: true })
+  dateEnd: string | null;
 }
