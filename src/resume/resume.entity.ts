@@ -37,7 +37,7 @@ export class Resume {
   @Column('varchar')
   email: string;
 
-  @Column('varchar', { nullable: true })
+  @Column('varchar')
   phone: string;
 
   @Column('varchar', { nullable: true })
@@ -48,6 +48,9 @@ export class Resume {
 
   @Column('integer')
   salary: number;
+
+  @Column('text', { nullable: true })
+  about: string;
 
   @OneToMany(type => Education, ed => ed.resume, {
     cascade: true,

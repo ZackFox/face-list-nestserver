@@ -27,6 +27,10 @@ export class ResumeDto {
   @ApiModelProperty()
   readonly lastname: string;
 
+  @IsEnum(Genders, { message: 'Значение "мужчина" или "женщина"' })
+  @ApiModelProperty({ enum: ['мужчина', 'женщина'] })
+  readonly gender: Genders;
+
   @IsNumber()
   @Min(14)
   @ApiModelProperty()
@@ -44,6 +48,7 @@ export class ResumeDto {
   @ApiModelProperty()
   readonly email: string;
 
+  @IsNotEmpty()
   @ApiModelProperty()
   readonly phone: string;
 
@@ -51,13 +56,13 @@ export class ResumeDto {
   @ApiModelProperty()
   readonly position: string;
 
+  @IsNumber()
   @IsNotEmpty()
   @ApiModelProperty()
   readonly salary: number;
 
-  @IsEnum(Genders, { message: 'Значение "мужчина" или "женщина"' })
-  @ApiModelProperty({ enum: ['мужчина', 'женщина'] })
-  readonly gender: Genders;
+  @ApiModelProperty()
+  readonly about: string;
 
   @ApiModelProperty({ type: [EducationDto] })
   @ValidateNested({ each: true })
