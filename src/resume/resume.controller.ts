@@ -8,6 +8,7 @@ import {
   Query,
   UseGuards,
   Controller,
+  Put,
 } from '@nestjs/common';
 import {
   ApiUseTags,
@@ -55,6 +56,11 @@ export class ResumeController {
     description: 'filter by gender',
     required: false,
   })
+  @ApiImplicitQuery({
+    name: 'city',
+    description: 'filter by city',
+    required: false,
+  })
   async findAll(@Query() query, @Res() res: Response) {
     const { page, limit, ...filters } = query;
 
@@ -79,6 +85,8 @@ export class ResumeController {
     });
   }
 
+  //===================================================================
+
   @Post()
   @ApiBearerAuth()
   @ApiOperation({ title: 'Create new resume' })
@@ -89,9 +97,11 @@ export class ResumeController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @UseGuards(AuthGuard('jwt'))
   async create(@Body() resumeDto: ResumeDto, @Res() res: Response) {
-    const data = await this.resumeService.createResume(resumeDto);
+    const data = await this.resumeService.save(resumeDto);
     return res.status(201).json({ data });
   }
+
+  //===================================================================
 
   @Get(':id')
   @ApiOperation({ title: 'Get single resume' })
@@ -107,6 +117,24 @@ export class ResumeController {
     const data = await this.resumeService.findOneById(parseInt(id, 10));
     return res.status(200).json({ data });
   }
+
+  //===================================================================
+
+  @Put()
+  @ApiBearerAuth()
+  @ApiOperation({ title: 'update one resume' })
+  @ApiResponse({
+    status: 201,
+    description: 'The record has been successfully updated.',
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @UseGuards(AuthGuard('jwt'))
+  async updateOne(@Body() resumeDto: ResumeDto, @Res() res: Response) {
+    const data = await this.resumeService.save(resumeDto);
+    return res.status(201).json({ data });
+  }
+
+  //===================================================================
 
   @Delete(':id')
   @ApiBearerAuth()

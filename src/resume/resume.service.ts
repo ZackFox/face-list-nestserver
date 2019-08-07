@@ -16,20 +16,18 @@ export class ResumeService {
     private resumeRepository: Repository<Resume>,
   ) {}
 
-  createResume(resumeDto: ResumeDto): Promise<Resume> {
-    const resume = plainToClass(Resume, resumeDto);
+  save(resumeDto: ResumeDto): Promise<Resume> {
+    const resumeToUpdate = plainToClass(Resume, resumeDto);
 
-    const edList = resumeDto.education.map(item =>
+    resumeToUpdate.education = resumeDto.education.map(item =>
       plainToClass(Education, item),
     );
-    const expList = resumeDto.experience.map(item =>
+    resumeToUpdate.experience = resumeDto.experience.map(item =>
       plainToClass(Experience, item),
     );
 
     return getManager().transaction(entityManager => {
-      resume.education = edList;
-      resume.experience = expList;
-      return entityManager.save(resume);
+      return entityManager.save(resumeToUpdate);
     });
   }
 
