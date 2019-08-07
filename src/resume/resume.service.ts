@@ -33,17 +33,16 @@ export class ResumeService {
     });
   }
 
-  async findAll(query, limit: number, offset: number) {
-    const keys = Object.keys(query);
+  async findAll(filters, limit: number, offset: number) {
     const queryBuilder = getManager()
       .createQueryBuilder(Resume, 'resume')
       .leftJoinAndSelect('resume.experience', 'experience')
       .orderBy('experience.dateStart', 'DESC');
 
-    keys.forEach((param, i) => {
+    Object.keys(filters).forEach((query, i) => {
       queryBuilder
-        .andWhere(`resume.${param} = :val${i}`)
-        .setParameter(`val${i}`, query[param]);
+        .andWhere(`lower(resume.${query}) = :val${i}`)
+        .setParameter(`val${i}`, filters[query].toLowerCase());
     });
 
     return queryBuilder
