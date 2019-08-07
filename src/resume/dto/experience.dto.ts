@@ -1,7 +1,11 @@
-import { IsDateString, IsString } from 'class-validator';
+import { IsDateString, IsString, IsNumber } from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
 
 export class ExperienceDto {
+  @IsNumber()
+  @ApiModelProperty()
+  readonly id: number;
+  
   @IsString()
   @ApiModelProperty()
   readonly name: string;

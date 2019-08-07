@@ -17,6 +17,10 @@ import { Genders } from '../../shared/gender.enum';
 export class ResumeDto {
   @IsNumber()
   @ApiModelProperty()
+  readonly id: number;
+  
+  @IsNumber()
+  @ApiModelProperty()
   readonly owner: number;
 
   @IsNotEmpty()
