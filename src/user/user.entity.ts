@@ -21,9 +21,6 @@ export class User {
   @Column('varchar', { length: '100' })
   lastname: string;
 
-  @Column('varchar')
-  city: string;
-
   @Column('varchar', { length: '160' })
   email: string;
 

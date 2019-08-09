@@ -10,10 +10,6 @@ export class CreateUserDto {
   @ApiModelProperty()
   readonly lastname: string;
 
-  @IsNotEmpty()
-  @ApiModelProperty()
-  readonly city: string;
-
   @IsEmail()
   @IsNotEmpty()
   @ApiModelProperty()
