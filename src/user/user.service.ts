@@ -14,7 +14,16 @@ export class UserService {
     return await this.userRepository.save(user);
   }
 
-  async findUser(email: string): Promise<User> {
+  async findUserByEmail(email: string): Promise<User> {
     return await this.userRepository.findOne({ email });
+  }
+
+  async getUserWithRelations(email: string): Promise<User> {
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoin('user.resumes', 'resumes')
+      .addSelect(['resumes.id', 'resumes.position'])
+      .where({ email })
+      .getOne();
   }
 }

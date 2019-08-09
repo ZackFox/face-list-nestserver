@@ -14,13 +14,16 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  public findUserByEmail(email: string) {
-    return this.userService.findUser(email);
+  public findUser(email: string) {
+    return this.userService.findUserByEmail(email);
+  }
+
+  public getUser(email: string) {
+    return this.userService.getUserWithRelations(email);
   }
 
   public async register(userDto: CreateUserDto): Promise<User> {
-    const user = plainToClass(User, userDto);
-    return this.userService.createUser(user);
+    return this.userService.createUser(plainToClass(User, userDto));
   }
 
   public createToken(user: User): string {
@@ -32,13 +35,8 @@ export class AuthService {
     });
   }
 
-  public getUser(token: string) {
-    const user: any = this.jwtService.decode(token);
-    return this.findUserByEmail(user.email);
-  }
-
   public async validateUser(credentials: LoginUserDto): Promise<User> {
-    const user = await this.findUserByEmail(credentials.email);
+    const user = await this.getUser(credentials.email);
     const isValid = await user.comparePassword(credentials.password);
     if (user && isValid) {
       return user;

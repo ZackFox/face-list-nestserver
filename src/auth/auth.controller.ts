@@ -46,7 +46,9 @@ export class AuthController {
     }
 
     const accessToken = this.authService.createToken(user);
-    return res.status(200).json({ statusCode: 200, accessToken });
+    return res
+      .status(200)
+      .json({ statusCode: 200, accessToken, user: classToPlain(user) });
   }
 
   @Post('signup')
@@ -60,7 +62,7 @@ export class AuthController {
     description: 'Current email is used already.',
   })
   async signUp(@Res() res, @Body() userDto: CreateUserDto) {
-    const user = await this.authService.findUserByEmail(userDto.email);
+    const user = await this.authService.findUser(userDto.email);
 
     if (user) {
       return res
@@ -68,29 +70,12 @@ export class AuthController {
         .json({ statusCode: '403', message: 'Current email is used already' });
     }
 
-    const newUser = await this.authService.register(userDto);
+    await this.authService.register(userDto);
+    const newUser = await this.authService.getUser(userDto.email);
     const accessToken = this.authService.createToken(newUser);
-    return res.status(200).json({ statusCode: '200', accessToken });
-  }
-
-  @Get('user')
-  @ApiBearerAuth()
-  @ApiOperation({ title: 'Get user data' })
-  @ApiResponse({
-    status: 200,
-    description: 'User data has been received.',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized.',
-  })
-  @UseGuards(AuthGuard('jwt'))
-  async getUser(@Headers('authorization') authHeader, @Res() res) {
-    const token = authHeader.split(' ')[1];
-    const user = await this.authService.getUser(token);
     return res
       .status(200)
-      .json({ statusCode: '200', user: classToPlain(user) });
+      .json({ statusCode: '200', accessToken, user: classToPlain(newUser) });
   }
 
   @Post('email')
@@ -104,7 +89,7 @@ export class AuthController {
     description: 'Email is not used',
   })
   async checkEmail(@Res() res, @Body() body: EmailDto) {
-    const user = await this.authService.findUserByEmail(body.email);
+    const user = await this.authService.getUser(body.email);
     if (user) {
       return res.status(201).json({
         statusCode: '201',
