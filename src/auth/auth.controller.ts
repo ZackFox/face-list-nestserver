@@ -78,6 +78,26 @@ export class AuthController {
       .json({ statusCode: '200', accessToken, user: classToPlain(newUser) });
   }
 
+  @Get('user')
+  @ApiBearerAuth()
+  @ApiOperation({ title: 'Get user data' })
+  @ApiResponse({
+    status: 200,
+    description: 'User data has been received.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized.',
+  })
+  @UseGuards(AuthGuard('jwt'))
+  async getUser(@Headers('authorization') authHeader, @Res() res) {
+    const token = authHeader.split(' ')[1];
+    const user = await this.authService.getUser(token);
+    return res
+      .status(200)
+      .json({ statusCode: '200', user: classToPlain(user) });
+  }
+
   @Post('email')
   @ApiOperation({ title: 'check existance of email' })
   @ApiResponse({
