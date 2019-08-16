@@ -35,7 +35,7 @@ export class AuthController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   async signIn(@Res() res, @Body() credentials: LoginUserDto) {
-    const user: User = await this.authService.validateUser(credentials);
+    const user: User = await this.authService.login(credentials);
 
     if (!user) {
       return res.status(403).json({
@@ -62,7 +62,7 @@ export class AuthController {
     description: 'Current email is used already.',
   })
   async signUp(@Res() res, @Body() userDto: CreateUserDto) {
-    const user = await this.authService.findUser(userDto.email);
+    const user = await this.authService.checkEmail(userDto.email);
 
     if (user) {
       return res
@@ -92,7 +92,7 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   async getUser(@Headers('authorization') authHeader, @Res() res) {
     const token = authHeader.split(' ')[1];
-    const user = await this.authService.getUser(token);
+    const user = await this.authService.getUserByToken(token);
     return res
       .status(200)
       .json({ statusCode: '200', user: classToPlain(user) });
@@ -109,7 +109,7 @@ export class AuthController {
     description: 'Email is not used',
   })
   async checkEmail(@Res() res, @Body() body: EmailDto) {
-    const user = await this.authService.getUser(body.email);
+    const user = await this.authService.checkEmail(body.email);
     if (user) {
       return res.status(201).json({
         statusCode: '201',

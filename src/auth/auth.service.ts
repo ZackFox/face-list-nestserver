@@ -14,18 +14,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  public findUser(email: string) {
-    return this.userService.findUserByEmail(email);
-  }
-
-  public getUser(email: string) {
-    return this.userService.getUserWithRelations(email);
-  }
-
-  public async register(userDto: CreateUserDto): Promise<User> {
-    return this.userService.createUser(plainToClass(User, userDto));
-  }
-
   public createToken(user: User): string {
     return this.jwtService.sign({
       id: user.id,
@@ -35,12 +23,29 @@ export class AuthService {
     });
   }
 
-  public async validateUser(credentials: LoginUserDto): Promise<User> {
-    const user = await this.getUser(credentials.email);
+  public async login(credentials: LoginUserDto): Promise<User> {
+    const user = await this.userService.getUserWithRelations(credentials.email);
     const isValid = await user.comparePassword(credentials.password);
     if (user && isValid) {
       return user;
     }
     return null;
+  }
+
+  public async register(userDto: CreateUserDto): Promise<User> {
+    return this.userService.createUser(plainToClass(User, userDto));
+  }
+
+  public checkEmail(email: string) {
+    return this.userService.findUserByEmail(email);
+  }
+
+  public getUser(email: string) {
+    return this.userService.getUserWithRelations(email);
+  }
+
+  public getUserByToken(token: string) {
+    const user: any = this.jwtService.decode(token);
+    return this.userService.getUserWithRelations(user.email);
   }
 }
