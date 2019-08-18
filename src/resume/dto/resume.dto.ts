@@ -5,6 +5,7 @@ import {
   IsEnum,
   IsEmail,
   Min,
+  IsString,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiModelProperty } from '@nestjs/swagger';
@@ -18,7 +19,7 @@ export class ResumeDto {
   @IsNumber()
   @ApiModelProperty()
   readonly id: number;
-  
+
   @IsNumber()
   @ApiModelProperty()
   readonly owner: number;
@@ -44,6 +45,7 @@ export class ResumeDto {
   readonly photo: string | null;
 
   @IsNotEmpty()
+  @IsString()
   @ApiModelProperty()
   readonly city: string;
 

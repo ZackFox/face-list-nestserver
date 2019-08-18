@@ -2,7 +2,6 @@
 /dist
 /node_modules
 /client
-/public
 .env
 # Logs
 logs
